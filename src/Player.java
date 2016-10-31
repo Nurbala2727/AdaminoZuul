@@ -1,4 +1,6 @@
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Stack;
 
 /*
@@ -10,9 +12,11 @@ public class Player {
 
     private final String mNAME;
     private final int mMAX_LOAD;
+    private final Stack mPREVIOUS_ROOMS;
+    private final List<Item> takenItems;
 
     private Room mCurrentRoom;
-    private final Stack mPREVIOUS_ROOMS;
+    private int mLoadLeft;
 
     /**
      * Creates the Player
@@ -21,9 +25,11 @@ public class Player {
      * @param maxLoad
      */
     public Player(String name, int maxLoad) {
-        this.mNAME = name;
-        this.mMAX_LOAD = maxLoad;
+        mNAME = name;
+        mMAX_LOAD = maxLoad;
+        mLoadLeft = mMAX_LOAD;
         mPREVIOUS_ROOMS = new Stack();
+        takenItems = new ArrayList<>();
     }
 
     /**
@@ -99,9 +105,51 @@ public class Player {
     public void takeItem(String itemName) {
         for (Item mItem : getCurrentRoom().getmItems()) {
             if (mItem.getItemName().equals(itemName)) {
-                System.out.println("Took item " + itemName);
+                if (mLoadLeft >= mItem.getItemWeight()) {
+                    System.out.println("Took item " + itemName);
+                    takenItems.add(mItem);
+                    mLoadLeft -= mItem.getItemWeight();
+                    getCurrentRoom().getmItems().remove(mItem);
+                    inventoryStatus();
+                    break;
+                } else {
+                    System.out.println("Sorry you don't have enough space to take " + mItem.getItemName());
+                }
+            } else {
+                System.out.println("Sorry no item of that name!");
+                break;
             }
         }
+    }
+
+    /**
+     * Drops the item to the mCurrentRoom
+     *
+     * @param itemName
+     */
+    public void dropItem(String itemName) {
+        for (Item mItem : takenItems) {
+            if (mItem.getItemName().equals(itemName)) {
+                System.out.println("Dropped item " + itemName);
+                takenItems.remove(mItem);
+                mLoadLeft += mItem.getItemWeight();
+                getCurrentRoom().getmItems().add(mItem);
+                inventoryStatus();
+                break;
+            }
+        }
+    }
+
+    /**
+     * Prints information about the players inventory status
+     */
+    public void inventoryStatus() {
+        if (takenItems.isEmpty()) {
+            System.out.println("You don't currently hold any items");
+        } else {
+            System.out.println("You're currently holding " + getTakenItemsAsString());
+        }
+        System.out.println("Of your maximum capacity of " + mMAX_LOAD + " Kg" + " you have " + mLoadLeft + " Kg left!");
     }
 
     /**
@@ -122,6 +170,17 @@ public class Player {
         } else {
             System.out.println("You're at the beginning!");
         }
+    }
+
+    /**
+     * Gets a String of the items the player currently holds
+     */
+    private String getTakenItemsAsString() {
+        String allItems = "";
+        for (Item item : takenItems) {
+            allItems += item.getItemName() + " ";
+        }
+        return allItems;
     }
 
 }
