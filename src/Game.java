@@ -115,31 +115,35 @@ class Game {
             return false;
         }
 
-        String commandWord = command.getCommandWord();
+        CommandWord commandWord = command.getCommandWord();
         String secondWord = command.getSecondWord();
+
         switch (commandWord) {
-            case "help":
+            case UNKNOWN:
+                System.out.println("I don't know what you mean...");
+                break;
+            case HELP:
                 printHelp();
                 break;
-            case "go":
+            case GO:
                 player.goRoom(command);
                 break;
-            case "quit":
+            case QUIT:
                 wantToQuit = quit(command);
                 break;
-            case "look":
+            case LOOK:
                 player.look();
                 break;
-            case "back":
+            case BACK:
                 player.goBack();
                 break;
-            case "take":
+            case TAKE:
                 player.takeItem(secondWord);
                 break;
-            case "drop":
+            case DROP:
                 player.dropItem(secondWord);
                 break;
-            case "items":
+            case ITEMS:
                 player.inventoryStatus();
                 break;
             default:
