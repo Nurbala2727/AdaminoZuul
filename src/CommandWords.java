@@ -30,8 +30,8 @@ class CommandWords {
      * is, false if it isn't.
      */
     public boolean isCommand(String aString) {
-        for (String VALID_COMMANDS1 : VALID_COMMANDS) {
-            if (VALID_COMMANDS1.equals(aString)) {
+        for (String command : VALID_COMMANDS) {
+            if (command.equals(aString)) {
                 return true;
             }
         }
@@ -43,8 +43,8 @@ class CommandWords {
      * Print all valid commands to System.out.
      */
     public void showAll() {
-        for (String VALID_COMMANDS1 : VALID_COMMANDS) {
-            System.out.print(VALID_COMMANDS1 + "  ");
+        for (String command : VALID_COMMANDS) {
+            System.out.print(command + "  ");
         }
         System.out.println();
     }

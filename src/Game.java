@@ -19,16 +19,22 @@
  */
 class Game {
 
-    private final Parser parser;
-    private Room currentRoom;
+    private final Parser mParser;
+    private Room mCurrentRoom;
     private final String GAME_TITLE = "Adamino's magical console adventure!";
+    private final String QUIT_MESSAGE = "Thank you for playing... Looser";
+    private static final String UNKNOWN = "I don't know what you mean...";
+    private static final String NORTH = "north";
+    private static final String SOUTH = "south";
+    private static final String EAST = "east";
+    private static final String WEST = "west";
 
     /**
      * Create the game and initialise its internal map.
      */
     public Game() {
         createRooms();
-        parser = new Parser();
+        mParser = new Parser();
     }
 
     /**
@@ -45,20 +51,20 @@ class Game {
         tower = new Room("in stairs to the tower");
 
         // initialise room exits
-        entrance.setExit("east", castleMainHall);
-        entrance.setExit("south", dungeon);
-        entrance.setExit("west", wineCellar);
+        entrance.setExit(EAST, castleMainHall);
+        entrance.setExit(SOUTH, dungeon);
+        entrance.setExit(WEST, wineCellar);
 
-        castleMainHall.setExit("west", entrance);
+        castleMainHall.setExit(WEST, entrance);
 
-        wineCellar.setExit("east", entrance);
+        wineCellar.setExit(EAST, entrance);
 
-        dungeon.setExit("north", entrance);
-        dungeon.setExit("east", tower);
+        dungeon.setExit(NORTH, entrance);
+        dungeon.setExit(EAST, tower);
 
-        tower.setExit("west", dungeon);
+        tower.setExit(WEST, dungeon);
 
-        currentRoom = entrance;  // start game at the entrance
+        mCurrentRoom = entrance;  // start game at the entrance
     }
 
     /**
@@ -71,10 +77,10 @@ class Game {
         // execute them until the game is over.
         boolean finished = false;
         while (!finished) {
-            Command command = parser.getCommand();
+            Command command = mParser.getCommand();
             finished = processCommand(command);
         }
-        System.out.println("Thank you for playing... Looser");
+        System.out.println(QUIT_MESSAGE);
     }
 
     /**
@@ -86,7 +92,7 @@ class Game {
         System.out.println(GAME_TITLE + " is a new, incredibly exciting discovery game.");
         System.out.println("Type 'help' if you need help.");
         System.out.println();
-        System.out.println(currentRoom.getLongDescription());
+        System.out.println(mCurrentRoom.getLongDescription());
     }
 
     /**
@@ -97,7 +103,7 @@ class Game {
         boolean wantToQuit = false;
 
         if (command.isUnknown()) {
-            System.out.println("I don't know what you mean...");
+            System.out.println(UNKNOWN);
             return false;
         }
 
@@ -128,7 +134,7 @@ class Game {
         System.out.println("around at the university.");
         System.out.println();
         System.out.println("Your command words are:");
-        parser.showCommands();
+        mParser.showCommands();
     }
 
     /**
@@ -145,13 +151,13 @@ class Game {
         String direction = command.getSecondWord();
 
         // Try to leave current room.
-        Room nextRoom = currentRoom.getExit(direction);
+        Room nextRoom = mCurrentRoom.getExit(direction);
 
         if (nextRoom == null) {
             System.out.println("There is no door!");
         } else {
-            currentRoom = nextRoom;
-            System.out.println(currentRoom.getLongDescription());
+            mCurrentRoom = nextRoom;
+            System.out.println(mCurrentRoom.getLongDescription());
         }
     }
 

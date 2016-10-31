@@ -21,8 +21,8 @@
  */
 class Command {
 
-    private final String commandWord;
-    private final String secondWord;
+    private final String COMMAND_WORD;
+    private final String SECOND_WORD;
 
     /**
      * Create a command object. First and second word must be supplied, but
@@ -30,8 +30,8 @@ class Command {
      * indicate that this was a command that is not recognised by this game.
      */
     public Command(String firstWord, String secondWord) {
-        commandWord = firstWord;
-        this.secondWord = secondWord;
+        COMMAND_WORD = firstWord;
+        SECOND_WORD = secondWord;
     }
 
     /**
@@ -39,7 +39,7 @@ class Command {
      * was not understood, the result is null.
      */
     public String getCommandWord() {
-        return commandWord;
+        return COMMAND_WORD;
     }
 
     /**
@@ -47,20 +47,20 @@ class Command {
      * second word.
      */
     public String getSecondWord() {
-        return secondWord;
+        return SECOND_WORD;
     }
 
     /**
      * Return true if this command was not understood.
      */
     public boolean isUnknown() {
-        return (commandWord == null);
+        return (COMMAND_WORD == null);
     }
 
     /**
      * Return true if the command has a second word.
      */
     public boolean hasSecondWord() {
-        return (secondWord != null);
+        return (SECOND_WORD != null);
     }
 }

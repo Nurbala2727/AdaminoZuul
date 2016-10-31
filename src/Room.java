@@ -19,8 +19,8 @@ import java.util.Set;
  */
 class Room {
 
-    private final String description;
-    private final HashMap exits;        // stores exits of this room.
+    private final String mDescription;
+    private final HashMap mExits;        // stores exits of this room.
 
     /**
      * Create a room described "description". Initially, it has no exits.
@@ -28,15 +28,15 @@ class Room {
      * yard".
      */
     public Room(String description) {
-        this.description = description;
-        exits = new HashMap();
+        mDescription = description;
+        mExits = new HashMap();
     }
 
     /**
      * Define an exit from this room.
      */
     public void setExit(String direction, Room neighbor) {
-        exits.put(direction, neighbor);
+        mExits.put(direction, neighbor);
     }
 
     /**
@@ -44,7 +44,7 @@ class Room {
      * constructor).
      */
     public String getShortDescription() {
-        return description;
+        return mDescription;
     }
 
     /**
@@ -52,7 +52,7 @@ class Room {
      * kitchen. Exits: north west
      */
     public String getLongDescription() {
-        return "You are " + description + ".\n" + getExitString();
+        return "You are " + mDescription + ".\n" + getExitString();
     }
 
     /**
@@ -61,7 +61,7 @@ class Room {
      */
     private String getExitString() {
         String returnString = "Exits:";
-        Set keys = exits.keySet();
+        Set keys = mExits.keySet();
         for (Iterator iter = keys.iterator(); iter.hasNext();) {
             returnString += " " + iter.next();
         }
@@ -73,6 +73,6 @@ class Room {
      * "direction". If there is no room in that direction, return null.
      */
     public Room getExit(String direction) {
-        return (Room) exits.get(direction);
+        return (Room) mExits.get(direction);
     }
 }
