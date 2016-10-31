@@ -60,7 +60,7 @@ class Game {
 
         castleMainHall.setExit(WEST, entrance);
         castleMainHall.addItem("carpet1", "A huge carpet on the floor with a dragon on", 3);
-        castleMainHall.addItem("wase2", "A huge blue wase with red dragon flames on", 2);
+        castleMainHall.addItem("wase3", "A huge blue wase with red dragon flames on", 2);
 
         wineCellar.setExit(EAST, entrance);
         wineCellar.addItem("wineRack", "Winerack with 200 different wines in", 150);
@@ -135,6 +135,12 @@ class Game {
                 break;
             case "take":
                 player.takeItem(secondWord);
+                break;
+            case "drop":
+                player.dropItem(secondWord);
+                break;
+            case "items":
+                player.inventoryStatus();
                 break;
             default:
                 break;
