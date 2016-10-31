@@ -1,6 +1,7 @@
 
+import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.Iterator;
+import java.util.List;
 import java.util.Set;
 
 /*
@@ -20,6 +21,7 @@ import java.util.Set;
 class Room {
 
     private final String mDescription;
+    private final List<Item> mItems;
     private final HashMap mExits;        // stores exits of this room.
 
     /**
@@ -30,6 +32,7 @@ class Room {
     public Room(String description) {
         mDescription = description;
         mExits = new HashMap();
+        mItems = new ArrayList<>();
     }
 
     /**
@@ -52,7 +55,9 @@ class Room {
      * kitchen. Exits: north west
      */
     public String getLongDescription() {
-        return "You are " + mDescription + ".\n" + getExitString();
+        return "You are " + mDescription
+                + ".\nHere you see " + getAllItems()
+                + "\n" + getExitString();
     }
 
     /**
@@ -61,9 +66,9 @@ class Room {
      */
     private String getExitString() {
         String returnString = "Exits:";
-        Set keys = mExits.keySet();
-        for (Iterator iter = keys.iterator(); iter.hasNext();) {
-            returnString += " " + iter.next();
+        Set<String> keys = mExits.keySet();
+        for (String exit : keys) {
+            returnString += " " + exit;
         }
         return returnString;
     }
@@ -74,5 +79,34 @@ class Room {
      */
     public Room getExit(String direction) {
         return (Room) mExits.get(direction);
+    }
+
+    /**
+     * Adds another item to the room
+     */
+    public void addItem(String name, String description, int weight) {
+        Item item = new Item(name, description, weight);
+        mItems.add(item);
+    }
+
+    /**
+     * Gets all the items in the room
+     */
+    private String getAllItems() {
+        String allItems = "";
+        for (Item mItem : mItems) {
+            allItems += mItem.getItemDescription() + " (" + mItem.getItemName() + ") "
+                    + " that weighs " + mItem.getItemWeight() + " Kg.\n";
+        }
+        return allItems;
+    }
+
+    /**
+     * Gets the list of items
+     *
+     * @return
+     */
+    public List<Item> getmItems() {
+        return mItems;
     }
 }

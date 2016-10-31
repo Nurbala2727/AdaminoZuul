@@ -1,16 +1,16 @@
 
 /**
- *  This class is the main class of the "World of Zuul" application.
- *  "World of Zuul" is a very simple, text based adventure game.  Users
- *  can walk around some scenery. That's all. It should really be extended
- *  to make it more interesting!
+ * This class is the main class of the "World of Zuul" application. "World of
+ * Zuul" is a very simple, text based adventure game. Users can walk around some
+ * scenery. That's all. It should really be extended to make it more
+ * interesting!
  *
- *  To play this game, create an instance of this class and call the "play"
- *  method.
+ * To play this game, create an instance of this class and call the "play"
+ * method.
  *
- *  This main class creates and initialises all the others: it creates all
- *  rooms, creates the parser and starts the game.  It also evaluates and
- *  executes the commands that the parser returns.
+ * This main class creates and initialises all the others: it creates all rooms,
+ * creates the parser and starts the game. It also evaluates and executes the
+ * commands that the parser returns.
  *
  */
 /**
@@ -20,7 +20,7 @@
 class Game {
 
     private final Parser mParser;
-    private Room mCurrentRoom;
+    private final Player player;
     private final String GAME_TITLE = "Adamino's magical console adventure!";
     private final String QUIT_MESSAGE = "Thank you for playing... Looser";
     private static final String UNKNOWN = "I don't know what you mean...";
@@ -33,6 +33,7 @@ class Game {
      * Create the game and initialise its internal map.
      */
     public Game() {
+        player = new Player("Adam", 10);
         createRooms();
         mParser = new Parser();
     }
@@ -54,17 +55,24 @@ class Game {
         entrance.setExit(EAST, castleMainHall);
         entrance.setExit(SOUTH, dungeon);
         entrance.setExit(WEST, wineCellar);
+        entrance.addItem("wase1", "A beautiful wase", 2);
+        entrance.addItem("wase2", "A small very ugly wase", 1);
 
         castleMainHall.setExit(WEST, entrance);
+        castleMainHall.addItem("carpet1", "A huge carpet on the floor with a dragon on", 3);
+        castleMainHall.addItem("wase2", "A huge blue wase with red dragon flames on", 2);
 
         wineCellar.setExit(EAST, entrance);
+        wineCellar.addItem("wineRack", "Winerack with 200 different wines in", 150);
 
         dungeon.setExit(NORTH, entrance);
         dungeon.setExit(EAST, tower);
+        dungeon.addItem("skeleton", "A skeleton haging from the ceiling", 1);
 
         tower.setExit(WEST, dungeon);
+        tower.addItem("chandelier", "Old dusty chandelier", 50);
 
-        mCurrentRoom = entrance;  // start game at the entrance
+        player.setCurrentRoom(entrance);  // start game at the entrance
     }
 
     /**
@@ -92,7 +100,7 @@ class Game {
         System.out.println(GAME_TITLE + " is a new, incredibly exciting discovery game.");
         System.out.println("Type 'help' if you need help.");
         System.out.println();
-        System.out.println(mCurrentRoom.getLongDescription());
+        System.out.println(player.getCurrentRoom().getLongDescription());
     }
 
     /**
@@ -108,15 +116,25 @@ class Game {
         }
 
         String commandWord = command.getCommandWord();
+        String secondWord = command.getSecondWord();
         switch (commandWord) {
             case "help":
                 printHelp();
                 break;
             case "go":
-                goRoom(command);
+                player.goRoom(command);
                 break;
             case "quit":
                 wantToQuit = quit(command);
+                break;
+            case "look":
+                player.look();
+                break;
+            case "back":
+                player.goBack();
+                break;
+            case "take":
+                player.takeItem(secondWord);
                 break;
             default:
                 break;
@@ -131,34 +149,10 @@ class Game {
      */
     private void printHelp() {
         System.out.println("You are lost. You are alone. You wander");
-        System.out.println("around at the university.");
+        System.out.println("around at the castle.");
         System.out.println();
         System.out.println("Your command words are:");
-        mParser.showCommands();
-    }
-
-    /**
-     * Try to go to one direction. If there is an exit, enter the new room,
-     * otherwise print an error message.
-     */
-    private void goRoom(Command command) {
-        if (!command.hasSecondWord()) {
-            // if there is no second word, we don't know where to go...
-            System.out.println("Go where?");
-            return;
-        }
-
-        String direction = command.getSecondWord();
-
-        // Try to leave current room.
-        Room nextRoom = mCurrentRoom.getExit(direction);
-
-        if (nextRoom == null) {
-            System.out.println("There is no door!");
-        } else {
-            mCurrentRoom = nextRoom;
-            System.out.println(mCurrentRoom.getLongDescription());
-        }
+        System.out.println(mParser.showCommands());
     }
 
     /**
