@@ -1,3 +1,6 @@
+
+import java.util.HashMap;
+
 /*
  * This class is the main class of the "World of Zuul" application.
  * "World of Zuul" is a very simple, text based adventure game.
@@ -6,47 +9,61 @@
  * It is used to recognise commands as they are typed in.
  *
  */
-
 /**
  *
  * @author Adamino
  */
-class CommandWords {
+public class CommandWords {
 
-    // a constant array that holds all valid command words
-    private static final String VALID_COMMANDS[] = {
-        "go", "quit", "help", "look", "back", "take", "drop", "items"
-    };
+    // A mapping between a command word and the CommandWord
+    // associated with it.
+    private HashMap<String, CommandWord> validCommands;
 
     /**
      * Constructor - initialise the command words.
      */
     public CommandWords() {
-        // nothing to do at the moment...
+        validCommands = new HashMap<String, CommandWord>();
+        for (CommandWord command : CommandWord.values()) {
+            if (command != CommandWord.UNKNOWN) {
+                validCommands.put(command.toString(), command);
+            }
+        }
     }
 
     /**
-     * Check whether a given String is a valid command word. Return true if it
-     * is, false if it isn't.
+     * Find the CommandWord associated with a command word.
+     *
+     * @param commandWord The word to look up.
+     * @return The CommandWord correspondng to commandWord, or UNKNOWN if it is
+     * not a valid command word.
      */
-    public boolean isCommand(String aString) {
-        for (String command : VALID_COMMANDS) {
-            if (command.equals(aString)) {
-                return true;
-            }
+    public CommandWord getCommandWord(String commandWord) {
+        CommandWord command = validCommands.get(commandWord);
+        if (command != null) {
+            return command;
+        } else {
+            return CommandWord.UNKNOWN;
         }
-        // if we get here, the string was not found in the commands
-        return false;
     }
 
-    /*
+    /**
+     * Check whether a given String is a valid command word.
+     *
+     * @return true if it is, false if it isn't.
+     */
+    public boolean isCommand(String aString) {
+        return validCommands.containsKey(aString);
+    }
+
+    /**
      * Print all valid commands to System.out.
      */
-    public String getCommandList() {
-        String commandList = "";
-        for (String command : VALID_COMMANDS) {
-            commandList += command + " ";
+    public String showAll() {
+        String allCommands = "";
+        for (String command : validCommands.keySet()) {
+            allCommands += command + " ";
         }
-        return commandList;
+        return allCommands;
     }
 }

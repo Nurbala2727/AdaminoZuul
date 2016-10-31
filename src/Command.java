@@ -19,48 +19,52 @@
  *
  * @author Adamino
  */
-class Command {
+public class Command {
 
-    private final String COMMAND_WORD;
-    private final String SECOND_WORD;
+    private CommandWord commandWord;
+    private String secondWord;
 
     /**
-     * Create a command object. First and second word must be supplied, but
-     * either one (or both) can be null. The command word should be null to
-     * indicate that this was a command that is not recognised by this game.
+     * Create a command object. First and second words must be supplied, but the
+     * second may be null.
+     *
+     * @param commandWord The CommandWord. UNKNOWN if the command word was not
+     * recognised.
+     * @param secondWord The second word of the command. May be null.
      */
-    public Command(String firstWord, String secondWord) {
-        COMMAND_WORD = firstWord;
-        SECOND_WORD = secondWord;
+    public Command(CommandWord commandWord, String secondWord) {
+        this.commandWord = commandWord;
+        this.secondWord = secondWord;
     }
 
     /**
-     * Return the command word (the first word) of this command. If the command
-     * was not understood, the result is null.
+     * Return the command word (the first word) of this command.
+     *
+     * @return The command word.
      */
-    public String getCommandWord() {
-        return COMMAND_WORD;
+    public CommandWord getCommandWord() {
+        return commandWord;
     }
 
     /**
-     * Return the second word of this command. Returns null if there was no
+     * @return The second word of this command. Returns null if there was no
      * second word.
      */
     public String getSecondWord() {
-        return SECOND_WORD;
+        return secondWord;
     }
 
     /**
-     * Return true if this command was not understood.
+     * @return true if this command was not understood.
      */
     public boolean isUnknown() {
-        return (COMMAND_WORD == null);
+        return (commandWord == CommandWord.UNKNOWN);
     }
 
     /**
-     * Return true if the command has a second word.
+     * @return true if the command has a second word.
      */
     public boolean hasSecondWord() {
-        return (SECOND_WORD != null);
+        return (secondWord != null);
     }
 }
