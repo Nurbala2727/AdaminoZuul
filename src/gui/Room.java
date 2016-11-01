@@ -1,4 +1,7 @@
+package gui;
 
+
+import gui.Weapon;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
