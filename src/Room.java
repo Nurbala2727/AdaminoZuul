@@ -18,9 +18,10 @@ import java.util.Set;
  *
  * @author Adamino
  */
-class Room {
+public class Room {
 
     private final String mDescription;
+    private final boolean mLocked;
     private final List<Item> mItems;
     private final HashMap mExits;        // stores exits of this room.
 
@@ -28,15 +29,23 @@ class Room {
      * Create a room described "description". Initially, it has no exits.
      * "description" is something like "in a kitchen" or "in an open court
      * yard".
+     *
+     * @param description
+     * @param locked
      */
-    public Room(String description) {
+    public Room(String description, boolean locked) {
         mDescription = description;
         mExits = new HashMap();
         mItems = new ArrayList<>();
+        mLocked = locked;
+
     }
 
     /**
      * Define an exit from this room.
+     *
+     * @param direction
+     * @param neighbor
      */
     public void setExit(String direction, Room neighbor) {
         mExits.put(direction, neighbor);
@@ -45,6 +54,8 @@ class Room {
     /**
      * Return the description of the room (the one that was defined in the
      * constructor).
+     *
+     * @return
      */
     public String getShortDescription() {
         return mDescription;
@@ -53,9 +64,11 @@ class Room {
     /**
      * Return a long description of this room, in the form: You are in the
      * kitchen. Exits: north west
+     *
+     * @return
      */
     public String getLongDescription() {
-        return "You are " + mDescription
+        return "You are in " + mDescription
                 + ".\nHere you see " + getAllItems()
                 + "\n" + getExitString();
     }
@@ -76,6 +89,9 @@ class Room {
     /**
      * Return the room that is reached if we go from this room in direction
      * "direction". If there is no room in that direction, return null.
+     *
+     * @param direction
+     * @return
      */
     public Room getExit(String direction) {
         return (Room) mExits.get(direction);
@@ -83,6 +99,10 @@ class Room {
 
     /**
      * Adds another item to the room
+     *
+     * @param name
+     * @param description
+     * @param weight
      */
     public void addItem(String name, String description, int weight) {
         Item item = new Item(name, description, weight);
@@ -108,5 +128,9 @@ class Room {
      */
     public List<Item> getmItems() {
         return mItems;
+    }
+
+    public boolean isLocked() {
+        return mLocked;
     }
 }
