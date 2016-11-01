@@ -42,32 +42,44 @@ class Game {
      * Create all the rooms and link their exits together.
      */
     private void createRooms() {
-        Room entrance, castleMainHall, wineCellar, dungeon, tower;
+        Room casleEntrance, castleMainHall, wineCellar, dungeon, tower, tortureRoom, creepyBedroom, courtRoom, sewars, attic, kithen, laboratory, ballRoom, secretPassage, lavatory;
 
         // create the rooms
-        entrance = new Room("the main entrance to the castle", false);
+        casleEntrance = new Room("the main entrance to the castle", false);
         castleMainHall = new Room("a castle main hall", false);
         wineCellar = new Room("the wine cellar", false);
         dungeon = new Room("a dungeon", false);
         tower = new Room("stairs to the tower", true);
+        tortureRoom = new Room("a dark torture room full of instruments used in the popular movie 'Fifty Shades of Grey'", false);
+        creepyBedroom = new Room("a creepy bedroom riveting of lust and desire, but also despair...", false);
+        courtRoom = new Room("a courtroom. The place of judgement. Truth will out!", false);
+        sewars = new Room("a dank sewar filled with moist and a flowing river", false);
+        attic = new Room("a mysterious attic with weird sound coming from the back of the room", false);
+        kithen = new Room("a huge kithen which smells awefully from... blood!?", false);
+        laboratory = new Room("a scary laboratory containing a huge table with a monster lying on it!", false);
+        ballRoom = new Room("a spectacular vast room with a reminiscens of people dancing from another age", false);
+        secretPassage = new Room("a hidden passage, which is quite narrow", true);
+        lavatory = new Room("a very old lavatory for women. When you enter the room you hear a sobbing cry from a long forgotte ghost named 'Moaning Myrtle'", false);
 
         // initialise room exits
-        entrance.setExit(EAST, castleMainHall);
-        entrance.setExit(SOUTH, dungeon);
-        entrance.setExit(WEST, wineCellar);
+        //TODO ALH: Redo and add exits
+        casleEntrance.setExit(EAST, castleMainHall);
+        casleEntrance.setExit(SOUTH, dungeon);
+        casleEntrance.setExit(WEST, wineCellar);
 
-        castleMainHall.setExit(WEST, entrance);
+        castleMainHall.setExit(WEST, casleEntrance);
 
-        wineCellar.setExit(EAST, entrance);
+        wineCellar.setExit(EAST, casleEntrance);
 
-        dungeon.setExit(NORTH, entrance);
+        dungeon.setExit(NORTH, casleEntrance);
         dungeon.setExit(EAST, tower);
 
         tower.setExit(WEST, dungeon);
 
         // Add items to the rooms
-        entrance.addItem("wase1", "a beautiful wase", 2);
-        entrance.addItem("wase2", "a small very ugly wase", 1);
+        //TODO ALH: Redo and add items
+        casleEntrance.addItem("wase1", "a beautiful wase", 2);
+        casleEntrance.addItem("wase2", "a small very ugly wase", 1);
 
         castleMainHall.addItem("carpet1", "a huge carpet on the floor with a dragon on", 3);
         castleMainHall.addItem("wase3", "a huge blue wase with red dragon flames on", 2);
@@ -80,7 +92,7 @@ class Game {
         tower.addItem("chandelier", "an Old dusty chandelier", 50);
 
         // start game at the entrance
-        player.setCurrentRoom(entrance);
+        player.setCurrentRoom(casleEntrance);
     }
 
     /**
