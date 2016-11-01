@@ -107,6 +107,8 @@ public class Player {
      * @param nextRoom
      */
     private void enterNextRoom(Room nextRoom) {
+        //TODO ALH: Add win condition to last roomwith princess!
+
         //Check if the room is locked and if so, if we have the secret key
         if (nextRoom.isLocked() && !mHaveKey) {
             System.out.println("You do not have the secret key to enter " + nextRoom.getShortDescription() + "!");
@@ -114,7 +116,15 @@ public class Player {
             //Room is accessable and we will remember the last room we visited before entering
             getPreviousRooms().add(getCurrentRoom());
             setCurrentRoom(nextRoom);
-            System.out.println(getCurrentRoom().getLongDescription());
+            if (mCurrentRoom.hasChallenge()) {
+                System.out.println(mCurrentRoom.getChallenge());
+                if (mCurrentRoom.isChallengePassed()) {
+                    System.out.println("Congratulations! you passed the test.");
+                    System.out.println(getCurrentRoom().getLongDescription());
+                }
+            } else {
+                System.out.println(getCurrentRoom().getLongDescription());
+            }
         }
     }
 

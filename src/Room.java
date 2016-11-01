@@ -22,7 +22,9 @@ public class Room {
 
     private final String mDescription;
     private final boolean mLocked;
+    private boolean mHasChallenge;
     private final List<Item> mItems;
+    private final List<Challenge> mChallenges;
     private final HashMap mExits;        // stores exits of this room.
 
     /**
@@ -36,7 +38,8 @@ public class Room {
     public Room(String description, boolean locked) {
         mDescription = description;
         mExits = new HashMap();
-        mItems = new ArrayList<>();
+        mItems = new ArrayList();
+        mChallenges = new ArrayList();
         mLocked = locked;
 
     }
@@ -49,6 +52,19 @@ public class Room {
      */
     public void setExit(String direction, Room neighbor) {
         mExits.put(direction, neighbor);
+    }
+
+    /**
+     * Adds a challenge to the room
+     *
+     * @param name
+     * @param description
+     * @param rightAnswer
+     */
+    public void addChallenge(String name, String description, String rightAnswer) {
+        Challenge challenge = new Challenge(name, description, rightAnswer);
+        mChallenges.add(challenge);
+        mHasChallenge = true;
     }
 
     /**
@@ -130,7 +146,56 @@ public class Room {
         return mItems;
     }
 
+    /**
+     * Tells if the room is locked
+     *
+     * @return
+     */
     public boolean isLocked() {
         return mLocked;
     }
+
+    /**
+     * Gets the hasChallenge boolean
+     *
+     * @return
+     */
+    public boolean hasChallenge() {
+        return mHasChallenge;
+    }
+
+    /**
+     * Gets the challenge for the room
+     *
+     * @return
+     */
+    public String getChallenge() {
+        String challenge;
+        challenge = (mChallenges.get(0).getChallenge());
+        return challenge;
+    }
+
+    /**
+     * Check if challenge is passed
+     *
+     * @return
+     */
+    public boolean isChallengePassed() {
+        boolean challengePassed;
+        challengePassed = mChallenges.get(0).isChallengePassed();
+        if (challengePassed) {
+            mChallenges.remove(0);
+        }
+        return challengePassed;
+    }
+
+    /**
+     * Gets the list of challenges
+     *
+     * @return
+     */
+    public List<Challenge> getChallenges() {
+        return mChallenges;
+    }
+
 }

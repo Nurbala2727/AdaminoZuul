@@ -17,7 +17,7 @@
  *
  * @author Adamino
  */
-class Game {
+public class Game {
 
     private final Parser mParser;
     private final Player player;
@@ -42,7 +42,7 @@ class Game {
      * Create all the rooms and link their exits together.
      */
     private void createRooms() {
-        Room casleEntrance, castleMainHall, wineCellar, dungeon, tower, tortureRoom, creepyBedroom, courtRoom, sewars, attic, kithen, laboratory, ballRoom, secretPassage, lavatory;
+        Room casleEntrance, castleMainHall, wineCellar, dungeon, tower, tortureRoom, creepyBedroom, courtRoom, sewars, attic, kitchen, laboratory, ballRoom, secretPassage, lavatory;
 
         // create the rooms
         casleEntrance = new Room("the main entrance to the castle", false);
@@ -55,29 +55,60 @@ class Game {
         courtRoom = new Room("a courtroom. The place of judgement. Truth will out!", false);
         sewars = new Room("a dank sewar filled with moist and a flowing river", false);
         attic = new Room("a mysterious attic with weird sound coming from the back of the room", false);
-        kithen = new Room("a huge kithen which smells awefully from... blood!?", false);
+        kitchen = new Room("a huge kithen which smells awefully from... blood!?", false);
         laboratory = new Room("a scary laboratory containing a huge table with a monster lying on it!", false);
-        ballRoom = new Room("a spectacular vast room with a reminiscens of people dancing from another age", false);
+        ballRoom = new Room("a spectacular vast ballroom with a reminiscens of people dancing from another age", false);
         secretPassage = new Room("a hidden passage, which is quite narrow", true);
         lavatory = new Room("a very old lavatory for women. When you enter the room you hear a sobbing cry from a long forgotte ghost named 'Moaning Myrtle'", false);
 
         // initialise room exits
-        //TODO ALH: Redo and add exits
-        casleEntrance.setExit(EAST, castleMainHall);
-        casleEntrance.setExit(SOUTH, dungeon);
-        casleEntrance.setExit(WEST, wineCellar);
+        casleEntrance.setExit(NORTH, castleMainHall);
 
-        castleMainHall.setExit(WEST, casleEntrance);
+        castleMainHall.setExit(WEST, wineCellar);
+        castleMainHall.setExit(NORTH, ballRoom);
+        castleMainHall.setExit(SOUTH, casleEntrance);
 
-        wineCellar.setExit(EAST, casleEntrance);
+        wineCellar.setExit(WEST, creepyBedroom);
+        wineCellar.setExit(NORTH, dungeon);
+        wineCellar.setExit(EAST, castleMainHall);
 
-        dungeon.setExit(NORTH, casleEntrance);
-        dungeon.setExit(EAST, tower);
+        creepyBedroom.setExit(NORTH, tortureRoom);
+        creepyBedroom.setExit(EAST, wineCellar);
 
-        tower.setExit(WEST, dungeon);
+        dungeon.setExit(WEST, tortureRoom);
+        dungeon.setExit(NORTH, sewars);
+        dungeon.setExit(SOUTH, wineCellar);
+
+        tortureRoom.setExit(NORTH, laboratory);
+        tortureRoom.setExit(SOUTH, creepyBedroom);
+
+        laboratory.setExit(SOUTH, tortureRoom);
+
+        sewars.setExit(SOUTH, dungeon);
+
+        ballRoom.setExit(EAST, kitchen);
+        ballRoom.setExit(NORTH, courtRoom);
+        ballRoom.setExit(SOUTH, castleMainHall);
+
+        kitchen.setExit(NORTH, lavatory);
+        kitchen.setExit(WEST, ballRoom);
+
+        lavatory.setExit(WEST, courtRoom);
+        lavatory.setExit(SOUTH, kitchen);
+
+        courtRoom.setExit(EAST, lavatory);
+        courtRoom.setExit(NORTH, secretPassage);
+        courtRoom.setExit(SOUTH, ballRoom);
+
+        secretPassage.setExit(NORTH, tower);
+        secretPassage.setExit(SOUTH, courtRoom);
+
+        tower.setExit(NORTH, attic);
+        tower.setExit(SOUTH, secretPassage);
+
+        attic.setExit(SOUTH, tower);
 
         // Add items to the rooms
-        //TODO ALH: Redo and add items
         casleEntrance.addItem("wase1", "a beautiful wase", 2);
         casleEntrance.addItem("wase2", "a small very ugly wase", 1);
 
@@ -87,9 +118,31 @@ class Game {
         wineCellar.addItem("wineRack", "a winerack with 200 different wines in", 150);
         wineCellar.addItem("secretKey", "a mysterious key that might grant you access to a certain location", 0);
 
+        creepyBedroom.addItem("creepyBed", "a big and soft bed. On the bed there are old sheets with some mysterious spots...", 60);
+        creepyBedroom.addItem("candlelight", "an old silver candlelight which, in former times, held many candlelights", 5);
+
         dungeon.addItem("skeleton", "a skeleton hanging from the ceiling", 1);
 
+        tortureRoom.addItem("whip", "an old whip which may have been used for spectacular things", 1);
+
+        laboratory.addItem("vessel", "a very old dusty vessel filled with a strange green substance", 0);
+
+        courtRoom.addItem("gavel", "a very old gavel from a dead judge", 1);
+
+        sewars.addItem("oars", "a pair of old dusty oars", 1);
+
+        ballRoom.addItem("gobbelin", "a huge gobbelin hanging on the wall", 25);
+
+        kitchen.addItem("pileOfBones", "a huge pile of bones is in the kitchen zink", 2);
+
         tower.addItem("chandelier", "an Old dusty chandelier", 50);
+
+        // Add challenges to challengeRooms
+        //TODO ALH: Add more challenges!
+        courtRoom.addChallenge("Justice or die", "2 + 2 gives?", "4");
+        courtRoom.getChallenges().get(0).addFakeAnswer("1");
+        courtRoom.getChallenges().get(0).addFakeAnswer("2");
+        courtRoom.getChallenges().get(0).addFakeAnswer("3");
 
         // start game at the entrance
         player.setCurrentRoom(casleEntrance);
@@ -140,7 +193,7 @@ class Game {
 
         switch (commandWord) {
             case UNKNOWN:
-                System.out.println("I don't know what you mean...");
+                System.out.println(UNKNOWN);
                 break;
             case HELP:
                 printHelp();
