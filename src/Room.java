@@ -23,8 +23,10 @@ public class Room {
     private final String mDescription;
     private final boolean mLocked;
     private boolean mHasChallenge;
+    private boolean mHasMonster;
     private final List<Item> mItems;
     private final List<Challenge> mChallenges;
+    private final List<Monster> mMonsters;
     private final HashMap mExits;        // stores exits of this room.
 
     /**
@@ -40,6 +42,7 @@ public class Room {
         mExits = new HashMap();
         mItems = new ArrayList();
         mChallenges = new ArrayList();
+        mMonsters = new ArrayList();
         mLocked = locked;
 
     }
@@ -84,9 +87,15 @@ public class Room {
      * @return
      */
     public String getLongDescription() {
-        return "You are in " + mDescription
-                + ".\nHere you see " + getAllItems()
-                + "\n" + getExitString();
+        String longDescription = "";
+        longDescription += "You are in " + mDescription + ".\nHere you see ";
+        if (!mItems.isEmpty()) {
+            longDescription += getAllItems();
+        } else {
+            longDescription += "nothing...";
+        }
+        longDescription += "\n" + getExitString();
+        return longDescription;
     }
 
     /**
@@ -142,7 +151,7 @@ public class Room {
      *
      * @return
      */
-    public List<Item> getmItems() {
+    public List<Item> getItems() {
         return mItems;
     }
 
@@ -185,6 +194,7 @@ public class Room {
         challengePassed = mChallenges.get(0).isChallengePassed();
         if (challengePassed) {
             mChallenges.remove(0);
+            mHasChallenge = false;
         }
         return challengePassed;
     }
@@ -196,6 +206,50 @@ public class Room {
      */
     public List<Challenge> getChallenges() {
         return mChallenges;
+    }
+
+    /**
+     * Adds a Monster to the Room
+     *
+     * @param name
+     * @param health
+     * @param damage
+     */
+    public void addMonster(String name, int health, int damage) {
+        Monster newMonster = new Monster(name, health, damage);
+        mMonsters.add(newMonster);
+        mHasMonster = true;
+    }
+
+    /**
+     * Gets the Monster
+     *
+     * @return
+     */
+    public List<Monster> getMonster() {
+        return mMonsters;
+    }
+
+    /**
+     * Add loot to the Monster in the Room in form of a weapon
+     *
+     * @param name
+     * @param description
+     * @param weight
+     * @param damage
+     */
+    public void addMonsterLoot(String name, String description, int weight, int damage) {
+        Item loot = new Weapon(name, description, weight, damage);
+        mMonsters.get(0).setLoot(loot);
+    }
+
+    /**
+     * Checks if the room has a monster
+     *
+     * @return
+     */
+    public boolean hasMonster() {
+        return mHasMonster;
     }
 
 }

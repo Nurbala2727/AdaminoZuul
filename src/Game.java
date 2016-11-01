@@ -21,9 +21,13 @@ public class Game {
 
     private final Parser mParser;
     private final Player player;
+    private static boolean isGameOver;
+    private static boolean isGameWon;
     private final String GAME_TITLE = "Adamino's magical console adventure!";
-    private final String QUIT_MESSAGE = "Thank you for playing... Looser";
+    private final String QUIT_MESSAGE = "Thank you for playing";
     private static final String UNKNOWN = "I don't know what you mean...";
+    private static final String LAST_BOSS = "Dracula";
+    private static final String FINAL_WEAPON = "ancientSwordOfDracula";
     private static final String NORTH = "north";
     private static final String SOUTH = "south";
     private static final String EAST = "east";
@@ -33,7 +37,9 @@ public class Game {
      * Create the game and initialise its internal map.
      */
     public Game() {
-        player = new Player("Adam", 10);
+        isGameOver = false;
+        isGameWon = false;
+        player = new Player("Adam", 25, 10);
         createRooms();
         mParser = new Parser();
     }
@@ -42,24 +48,25 @@ public class Game {
      * Create all the rooms and link their exits together.
      */
     private void createRooms() {
-        Room casleEntrance, castleMainHall, wineCellar, dungeon, tower, tortureRoom, creepyBedroom, courtRoom, sewars, attic, kitchen, laboratory, ballRoom, secretPassage, lavatory;
+        Room casleEntrance, castleMainHall, wineCellar, dungeon, tower, tortureRoom, creepyBedroom, courtRoom, sewars, attic, kitchen, laboratory, ballRoom, secretPassage, lavatory, boat;
 
         // create the rooms
         casleEntrance = new Room("the main entrance to the castle", false);
         castleMainHall = new Room("a castle main hall", false);
         wineCellar = new Room("the wine cellar", false);
         dungeon = new Room("a dungeon", false);
-        tower = new Room("stairs to the tower", true);
+        tower = new Room("the beginning of stairs to the tower", true);
         tortureRoom = new Room("a dark torture room full of instruments used in the popular movie 'Fifty Shades of Grey'", false);
         creepyBedroom = new Room("a creepy bedroom riveting of lust and desire, but also despair...", false);
         courtRoom = new Room("a courtroom. The place of judgement. Truth will out!", false);
         sewars = new Room("a dank sewar filled with moist and a flowing river", false);
         attic = new Room("a mysterious attic with weird sound coming from the back of the room", false);
         kitchen = new Room("a huge kithen which smells awefully from... blood!?", false);
-        laboratory = new Room("a scary laboratory containing a huge table with a monster lying on it!", false);
+        laboratory = new Room("a scary laboratory containing a huge table!", false);
         ballRoom = new Room("a spectacular vast ballroom with a reminiscens of people dancing from another age", false);
         secretPassage = new Room("a hidden passage, which is quite narrow", true);
         lavatory = new Room("a very old lavatory for women. When you enter the room you hear a sobbing cry from a long forgotte ghost named 'Moaning Myrtle'", false);
+        boat = new Room("a little poddle of water and some very old marks that looks like bloodstains...", false);
 
         // initialise room exits
         casleEntrance.setExit(NORTH, castleMainHall);
@@ -85,6 +92,7 @@ public class Game {
         laboratory.setExit(SOUTH, tortureRoom);
 
         sewars.setExit(SOUTH, dungeon);
+        sewars.setExit(NORTH, dungeon);
 
         ballRoom.setExit(EAST, kitchen);
         ballRoom.setExit(NORTH, courtRoom);
@@ -109,6 +117,7 @@ public class Game {
         attic.setExit(SOUTH, tower);
 
         // Add items to the rooms
+        // Add the needed items to finish the game
         casleEntrance.addItem("wase1", "a beautiful wase", 2);
         casleEntrance.addItem("wase2", "a small very ugly wase", 1);
 
@@ -138,11 +147,26 @@ public class Game {
         tower.addItem("chandelier", "an Old dusty chandelier", 50);
 
         // Add challenges to challengeRooms
-        //TODO ALH: Add more challenges!
-        courtRoom.addChallenge("Justice or die", "2 + 2 gives?", "4");
-        courtRoom.getChallenges().get(0).addFakeAnswer("1");
-        courtRoom.getChallenges().get(0).addFakeAnswer("2");
-        courtRoom.getChallenges().get(0).addFakeAnswer("3");
+        courtRoom.addChallenge("Justice or die", "For what was Jesus condemned to death on the cross?", "'blasphemy' (claiming to be god)");
+        courtRoom.getChallenges().get(0).addFakeAnswer("Saying the king was wrong");
+        courtRoom.getChallenges().get(0).addFakeAnswer("For killing a lamb");
+        courtRoom.getChallenges().get(0).addFakeAnswer("For doing carpentry on a Sunday");
+
+        laboratory.addChallenge("Master of the Monster", "Who is the author behind the well known book 'Frankenstein'", "Mary Shelley");
+        laboratory.getChallenges().get(0).addFakeAnswer("Emily Bronte");
+        laboratory.getChallenges().get(0).addFakeAnswer("William Blake");
+
+        lavatory.addChallenge("A cry of despair", "What killed the character 'Moaning Myrtle' in the Harry Potter series?", "The Bassilisk");
+        lavatory.getChallenges().get(0).addFakeAnswer("Voldemort");
+        lavatory.getChallenges().get(0).addFakeAnswer("An 'Acromantula'");
+
+        // Add Monster to a Room
+        laboratory.addMonster("The Monster of Frankenstein", 10, 3);
+        laboratory.getMonster().get(0).setSpeach("I am the long forgotten monster created by Frankenstein! Now you will die!");
+        laboratory.addMonsterLoot("ancientSwordOfDracula", "a sword that was forged in another time and has a touch of destiny", 3, 50);
+
+        attic.addMonster("Dracula", 100, 5);
+        attic.getMonster().get(0).setSpeach("So you finally arrived... You will never get the princess!!!");
 
         // start game at the entrance
         player.setCurrentRoom(casleEntrance);
@@ -160,6 +184,9 @@ public class Game {
         while (!finished) {
             Command command = mParser.getCommand();
             finished = processCommand(command);
+            if (isGameOver || isGameWon) {
+                finished = true;
+            }
         }
         System.out.println(QUIT_MESSAGE);
     }
@@ -250,5 +277,48 @@ public class Game {
         } else {
             return true;  // signal that we want to quit
         }
+    }
+
+    /**
+     * Check if game is over
+     *
+     * @return
+     */
+    private boolean isGameOver() {
+        return isGameOver;
+    }
+
+    /**
+     * Make game over if player dies
+     */
+    public static void gameOver() {
+        System.out.println("\nBetter luck next time!");
+        isGameOver = true;
+    }
+
+    /**
+     * Win the game by freeing the princess!
+     */
+    public static void win() {
+        System.out.println("\nCongratulations! You won the game!!!");
+        isGameWon = true;
+    }
+
+    /**
+     * Gets the name of the last boss
+     *
+     * @return
+     */
+    public static String getLAST_BOSS() {
+        return LAST_BOSS;
+    }
+
+    /**
+     * Gets the name of the final weapon
+     *
+     * @return
+     */
+    public static String getFINAL_WEAPON() {
+        return FINAL_WEAPON;
     }
 }

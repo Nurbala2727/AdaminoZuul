@@ -12,7 +12,7 @@ public class Challenge {
 
     private final String mChallengeName;
     private final String mChallengeDescription;
-    private List<String> mAnswers;
+    private final List<String> mAnswers;
     private final String mRightAnswer;
 
     /**
@@ -47,12 +47,12 @@ public class Challenge {
     public String getChallenge() {
         String challenge = "This room has the following challenge!\n";
         challenge += mChallengeName + ": ";
-        challenge += mChallengeDescription + "\n";
+        challenge += mChallengeDescription + "\n\n";
         challenge += "Choose your answer wisely:\n";
         //TODO ALH: make this better
         for (int i = 0; i < mAnswers.size(); i++) {
             for (String mAnswer : mAnswers) {
-                challenge += i + ") " + mAnswer + "\n";
+                challenge += "Type " + i + ") " + mAnswer + "\n";
                 i++;
             }
         }
@@ -78,7 +78,7 @@ public class Challenge {
      */
     public boolean isChallengePassed() {
         boolean isAnswerCorrect;
-        if (getAnswer().equals(mRightAnswer)) {
+        if (getAnswer().equalsIgnoreCase("0")) {
             isAnswerCorrect = true;
         } else {
             isAnswerCorrect = false;
