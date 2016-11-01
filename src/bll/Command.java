@@ -1,3 +1,5 @@
+package bll;
+
 
 /**
  * This class is the main class of the "World of Zuul" application.
