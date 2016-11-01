@@ -45,34 +45,42 @@ class Game {
         Room entrance, castleMainHall, wineCellar, dungeon, tower;
 
         // create the rooms
-        entrance = new Room("the main entrance to the castle");
-        castleMainHall = new Room("in a castle main hall");
-        wineCellar = new Room("in the wine cellar");
-        dungeon = new Room("in a dungeon");
-        tower = new Room("in stairs to the tower");
+        entrance = new Room("the main entrance to the castle", false);
+        castleMainHall = new Room("a castle main hall", false);
+        wineCellar = new Room("the wine cellar", false);
+        dungeon = new Room("a dungeon", false);
+        tower = new Room("stairs to the tower", true);
 
         // initialise room exits
         entrance.setExit(EAST, castleMainHall);
         entrance.setExit(SOUTH, dungeon);
         entrance.setExit(WEST, wineCellar);
-        entrance.addItem("wase1", "A beautiful wase", 2);
-        entrance.addItem("wase2", "A small very ugly wase", 1);
 
         castleMainHall.setExit(WEST, entrance);
-        castleMainHall.addItem("carpet1", "A huge carpet on the floor with a dragon on", 3);
-        castleMainHall.addItem("wase3", "A huge blue wase with red dragon flames on", 2);
 
         wineCellar.setExit(EAST, entrance);
-        wineCellar.addItem("wineRack", "Winerack with 200 different wines in", 150);
 
         dungeon.setExit(NORTH, entrance);
         dungeon.setExit(EAST, tower);
-        dungeon.addItem("skeleton", "A skeleton haging from the ceiling", 1);
 
         tower.setExit(WEST, dungeon);
-        tower.addItem("chandelier", "Old dusty chandelier", 50);
 
-        player.setCurrentRoom(entrance);  // start game at the entrance
+        // Add items to the rooms
+        entrance.addItem("wase1", "a beautiful wase", 2);
+        entrance.addItem("wase2", "a small very ugly wase", 1);
+
+        castleMainHall.addItem("carpet1", "a huge carpet on the floor with a dragon on", 3);
+        castleMainHall.addItem("wase3", "a huge blue wase with red dragon flames on", 2);
+
+        wineCellar.addItem("wineRack", "a winerack with 200 different wines in", 150);
+        wineCellar.addItem("secretKey", "a mysterious key that might grant you access to a certain location", 0);
+
+        dungeon.addItem("skeleton", "a skeleton hanging from the ceiling", 1);
+
+        tower.addItem("chandelier", "an Old dusty chandelier", 50);
+
+        // start game at the entrance
+        player.setCurrentRoom(entrance);
     }
 
     /**

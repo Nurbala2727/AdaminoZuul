@@ -12,6 +12,7 @@ public class Player {
 
     private final String mNAME;
     private final int mMAX_LOAD;
+    private boolean mHaveKey;
     private final Stack mPREVIOUS_ROOMS;
     private final List<Item> takenItems;
 
@@ -30,6 +31,8 @@ public class Player {
         mLoadLeft = mMAX_LOAD;
         mPREVIOUS_ROOMS = new Stack();
         takenItems = new ArrayList<>();
+        mHaveKey = false;
+
     }
 
     /**
@@ -75,6 +78,8 @@ public class Player {
     /**
      * Try to go to one direction. If there is an exit, enter the new room,
      * otherwise print an error message.
+     *
+     * @param command
      */
     public void goRoom(Command command) {
         if (!command.hasSecondWord()) {
@@ -91,6 +96,22 @@ public class Player {
         if (nextRoom == null) {
             System.out.println("There is no door!");
         } else {
+            enterNextRoom(nextRoom);
+        }
+    }
+
+    /**
+     * If room isn't locked enter the next room If the room is locked, but we
+     * have the key we can enter!
+     *
+     * @param nextRoom
+     */
+    private void enterNextRoom(Room nextRoom) {
+        //Check if the room is locked and if so, if we have the secret key
+        if (nextRoom.isLocked() && !mHaveKey) {
+            System.out.println("You do not have the secret key to enter " + nextRoom.getShortDescription() + "!");
+        } else {
+            //Room is accessable and we will remember the last room we visited before entering
             getPreviousRooms().add(getCurrentRoom());
             setCurrentRoom(nextRoom);
             System.out.println(getCurrentRoom().getLongDescription());
@@ -98,7 +119,7 @@ public class Player {
     }
 
     /**
-     * Player picks up the item
+     * Player picks up the item if it is not too heavy
      *
      * @param itemName
      */
@@ -106,19 +127,40 @@ public class Player {
         for (Item mItem : getCurrentRoom().getmItems()) {
             if (mItem.getItemName().equals(itemName)) {
                 if (mLoadLeft >= mItem.getItemWeight()) {
-                    System.out.println("Took item " + itemName);
-                    takenItems.add(mItem);
-                    mLoadLeft -= mItem.getItemWeight();
-                    getCurrentRoom().getmItems().remove(mItem);
+                    addItemToInventory(itemName, mItem);
+                    checkForSecretKey(mItem);
                     inventoryStatus();
                     break;
                 } else {
                     System.out.println("Sorry you don't have enough space to take " + mItem.getItemName());
                 }
-            } else {
-                System.out.println("Sorry no item of that name!");
-                break;
             }
+        }
+    }
+
+    /**
+     * Adds current item to the players inventory and reduces the total weigh
+     * the player can hold
+     *
+     * @param itemName
+     * @param mItem
+     */
+    private void addItemToInventory(String itemName, Item mItem) {
+        System.out.println("Took item " + itemName);
+        takenItems.add(mItem);
+        mLoadLeft -= mItem.getItemWeight();
+        getCurrentRoom().getmItems().remove(mItem);
+    }
+
+    /**
+     * Checks if the player picked up the secret key!
+     *
+     * @param mItem
+     */
+    private void checkForSecretKey(Item mItem) {
+        if (mItem.getItemName().equals("secretKey")) {
+            System.out.println("You found the secret key and should now look for the locked door!");
+            setSecretKey();
         }
     }
 
@@ -181,6 +223,13 @@ public class Player {
             allItems += item.getItemName() + " ";
         }
         return allItems;
+    }
+
+    /**
+     * Updates the player to have the secret key!
+     */
+    private void setSecretKey() {
+        mHaveKey = true;
     }
 
 }

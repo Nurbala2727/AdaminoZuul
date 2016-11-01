@@ -6,9 +6,9 @@
 
 public class Item {
 
-    private String mName;
-    private String mDescription;
-    private int mWeight;
+    private final String mName;
+    private final String mDescription;
+    private final int mWeight;
 
     /**
      * Creates the item with parsed arguments

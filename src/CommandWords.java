@@ -23,7 +23,7 @@ public class CommandWords {
      * Constructor - initialise the command words.
      */
     public CommandWords() {
-        validCommands = new HashMap<String, CommandWord>();
+        validCommands = new HashMap<>();
         for (CommandWord command : CommandWord.values()) {
             if (command != CommandWord.UNKNOWN) {
                 validCommands.put(command.toString(), command);
@@ -50,6 +50,7 @@ public class CommandWords {
     /**
      * Check whether a given String is a valid command word.
      *
+     * @param aString
      * @return true if it is, false if it isn't.
      */
     public boolean isCommand(String aString) {
@@ -58,6 +59,8 @@ public class CommandWords {
 
     /**
      * Print all valid commands to System.out.
+     *
+     * @return
      */
     public String showAll() {
         String allCommands = "";

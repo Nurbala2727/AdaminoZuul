@@ -10,7 +10,7 @@ public enum CommandWord {
     GO("go"), QUIT("quit"), HELP("help"), UNKNOWN("?"), LOOK("look"), BACK("back"), TAKE("take"), DROP("drop"), ITEMS("items");
 
     // The command string.
-    private String commandString;
+    private final String commandString;
 
     /**
      * Initialise with the corresponding command string.
@@ -24,6 +24,7 @@ public enum CommandWord {
     /**
      * @return The command word as a string.
      */
+    @Override
     public String toString() {
         return commandString;
     }

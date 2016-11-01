@@ -21,8 +21,8 @@ import java.util.Scanner;
  */
 public class Parser {
 
-    private CommandWords commands;  // holds all valid command words
-    private Scanner reader;         // source of command input
+    private final CommandWords commands;  // holds all valid command words
+    private final Scanner reader;         // source of command input
 
     /**
      * Create a parser to read from the terminal window.
@@ -59,6 +59,8 @@ public class Parser {
 
     /**
      * Print out a list of valid command words.
+     *
+     * @return
      */
     public String showCommands() {
         return commands.showAll();
