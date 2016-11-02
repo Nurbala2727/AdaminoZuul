@@ -21,4 +21,12 @@ public class OutputManager {
         System.out.println(message);
     }
 
+    /**
+     * Parses string on same line
+     *
+     * @param message
+     */
+    public static void outputStringSameLine(String message) {
+        System.out.print(message);
+    }
 }
