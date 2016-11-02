@@ -1,9 +1,11 @@
-package gui;
+package be;
 
-
+import be.Item;
+import be.Room;
+import be.Weapon;
 import bll.Command;
-import gui.Room;
-import gui.Weapon;
+import gui.model.Game;
+import gui.view.OutputManager;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
@@ -100,7 +102,7 @@ public class Player {
     public void goRoom(Command command) {
         if (!command.hasSecondWord()) {
             // if there is no second word, we don't know where to go...
-            System.out.println("Go where?");
+            OutputManager.outputString("Go where?");
             return;
         }
 
@@ -110,7 +112,7 @@ public class Player {
         Room nextRoom = getCurrentRoom().getExit(direction);
 
         if (nextRoom == null) {
-            System.out.println("There is no door!");
+            OutputManager.outputString("There is no door!");
         } else {
             enterNextRoom(nextRoom);
         }
@@ -125,10 +127,10 @@ public class Player {
     private void enterNextRoom(Room nextRoom) {
         //Check if the room is locked and if so, if we have the secret key
         if (nextRoom.isLocked() && !mHaveKey) {
-            System.out.println("You do not have the secret key to enter " + nextRoom.getShortDescription() + "!");
+            OutputManager.outputString("You do not have the secret key to enter " + nextRoom.getShortDescription() + "!");
         } else {
             if (nextRoom.isLocked() && mHaveKey) {
-                System.out.println("You use your secret key to open the door!");
+                OutputManager.outputString("You use your secret key to open the door!");
             }
             //Room is accessable and we will remember the last room we visited before entering
             getPreviousRooms().add(getCurrentRoom());
@@ -153,15 +155,15 @@ public class Player {
      */
     private void checkForChallenge() {
         if (mCurrentRoom.hasChallenge()) {
-            System.out.println(mCurrentRoom.getChallenge());
+            OutputManager.outputString(mCurrentRoom.getChallenge());
             if (mCurrentRoom.isChallengePassed()) {
-                System.out.println("Congratulations! you passed the test.");
-                System.out.println(getCurrentRoom().getLongDescription());
+                OutputManager.outputString("Congratulations! you passed the test.");
+                OutputManager.outputString(getCurrentRoom().getLongDescription());
             } else {
                 teleportToBeginning();
             }
         } else {
-            System.out.println(getCurrentRoom().getLongDescription());
+            OutputManager.outputString(getCurrentRoom().getLongDescription());
         }
     }
 
@@ -169,9 +171,9 @@ public class Player {
      * Teleport the soor looser back to the beginning!
      */
     private void teleportToBeginning() {
-        System.out.println("Unfortunately that is wrong... TELEPORTING");
+        OutputManager.outputString("Unfortunately that is wrong... TELEPORTING");
         mCurrentRoom = (Room) mPREVIOUS_ROOMS.firstElement();
-        System.out.println(getCurrentRoom().getLongDescription());
+        OutputManager.outputString(getCurrentRoom().getLongDescription());
     }
 
     /**
@@ -189,7 +191,7 @@ public class Player {
                     inventoryStatus();
                     break;
                 } else {
-                    System.out.println("Sorry you don't have enough space to take " + mItem.getItemName());
+                    OutputManager.outputString("Sorry you don't have enough space to take " + mItem.getItemName());
                 }
             }
         }
@@ -203,7 +205,7 @@ public class Player {
      * @param mItem
      */
     private void addItemToInventory(String itemName, Item mItem) {
-        System.out.println("Took item " + itemName);
+        OutputManager.outputString("Took item " + itemName);
         takenItems.add(mItem);
         mLoadLeft -= mItem.getItemWeight();
         getCurrentRoom().getItems().remove(mItem);
@@ -216,7 +218,7 @@ public class Player {
      */
     private void checkForSecretKey(Item mItem) {
         if (mItem.getItemName().equals("secretKey")) {
-            System.out.println("You found the secret key and should now look for the locked door!");
+            OutputManager.outputString("You found the secret key and should now look for the locked door!");
             setSecretKey();
         }
     }
@@ -229,7 +231,7 @@ public class Player {
     public void dropItem(String itemName) {
         for (Item mItem : takenItems) {
             if (mItem.getItemName().equals(itemName)) {
-                System.out.println("Dropped item " + itemName);
+                OutputManager.outputString("Dropped item " + itemName);
                 takenItems.remove(mItem);
                 mLoadLeft += mItem.getItemWeight();
                 getCurrentRoom().getItems().add(mItem);
@@ -244,18 +246,18 @@ public class Player {
      */
     public void inventoryStatus() {
         if (takenItems.isEmpty()) {
-            System.out.println("You don't currently hold any items");
+            OutputManager.outputString("You don't currently hold any items");
         } else {
-            System.out.println("You're currently holding " + getTakenItemsAsString());
+            OutputManager.outputString("You're currently holding " + getTakenItemsAsString());
         }
-        System.out.println("Of your maximum capacity of " + mMAX_LOAD + " Kg" + " you have " + mLoadLeft + " Kg left!");
+        OutputManager.outputString("Of your maximum capacity of " + mMAX_LOAD + " Kg" + " you have " + mLoadLeft + " Kg left!");
     }
 
     /**
      * Takes a look around the room and reports back the exits!
      */
     public void look() {
-        System.out.println(getCurrentRoom().getLongDescription());
+        OutputManager.outputString(getCurrentRoom().getLongDescription());
     }
 
     /**
@@ -265,9 +267,9 @@ public class Player {
         if (!getPreviousRooms().isEmpty()) {
             setCurrentRoom((Room) getPreviousRooms().lastElement());
             getPreviousRooms().remove(getPreviousRooms().lastElement());
-            System.out.println(getCurrentRoom().getLongDescription());
+            OutputManager.outputString(getCurrentRoom().getLongDescription());
         } else {
-            System.out.println("You're at the beginning!");
+            OutputManager.outputString("You're at the beginning!");
         }
     }
 
@@ -293,25 +295,25 @@ public class Player {
      * Fight the monster
      */
     public void fightMonster() {
-        System.out.println("\nAaaaaarh there is a monster in here!!!");
+        OutputManager.outputString("\nAaaaaarh there is a monster in here!!!");
         checkForLastBossEncounter();
         boolean monsterIsAlive = true;
-        System.out.println("\nCombat vs " + mCurrentRoom.getMonster().get(0).getName() + " begins!");
+        OutputManager.outputString("\nCombat vs " + mCurrentRoom.getMonster().get(0).getName() + " begins!");
         while (monsterIsAlive) {
             hitMonster();
             monsterIsAlive = isMonsterStillAlive();
             if (monsterIsAlive) {
-                System.out.println(mCurrentRoom.getMonster().get(0).damagePlayer());
+                OutputManager.outputString(mCurrentRoom.getMonster().get(0).damagePlayer());
                 mHealth -= mCurrentRoom.getMonster().get(0).getDamage();
                 if (mHealth <= 0) {
-                    System.out.println(mCurrentRoom.getMonster().get(0).getName() + " killed you...");
+                    OutputManager.outputString(mCurrentRoom.getMonster().get(0).getName() + " killed you...");
                     Game.gameOver();
                     break;
                 } else {
-                    System.out.println("You now only have " + mHealth + " health left!");
+                    OutputManager.outputString("You now only have " + mHealth + " health left!");
                 }
             } else {
-                System.out.println("You have slayed " + mCurrentRoom.getMonster().get(0).getName() + " congratulations!");
+                OutputManager.outputString("You have slayed " + mCurrentRoom.getMonster().get(0).getName() + " congratulations!");
                 checkBossKill();
                 mCurrentRoom.getMonster().remove(0);
             }
@@ -323,11 +325,11 @@ public class Player {
      */
     private void checkBossKill() {
         if (mCurrentRoom.getMonster().get(0).getName().equals(Game.getLAST_BOSS())) {
-            System.out.println("\nYou have now found the princess and she is so happy that you saved her, that she promises to marry you!");
+            OutputManager.outputString("\nYou have now found the princess and she is so happy that you saved her, that she promises to marry you!");
             Game.win();
         } else {
             mCurrentRoom.getItems().add(mCurrentRoom.getMonster().get(0).getLoot());
-            System.out.println("\nWhile hitting the floor " + mCurrentRoom.getMonster().get(0).getName() + " dropped "
+            OutputManager.outputString("\nWhile hitting the floor " + mCurrentRoom.getMonster().get(0).getName() + " dropped "
                     + mCurrentRoom.getMonster().get(0).getLoot().getItemName() + "!" + "\nThe inscription on this weapon reads:\n"
                     + mCurrentRoom.getMonster().get(0).getLoot().getItemDescription());
         }
@@ -338,7 +340,7 @@ public class Player {
      */
     private void checkForLastBossEncounter() {
         if (mCurrentRoom.getMonster().get(0).getName().equals(Game.getLAST_BOSS())) {
-            System.out.println("You found the final boss " + Game.getLAST_BOSS());
+            OutputManager.outputString("You found the final boss " + Game.getLAST_BOSS());
             boolean haveFinalItem = false;
             for (Item takenItem : takenItems) {
                 if (takenItem.getItemName().equals(Game.getFINAL_WEAPON())) {
@@ -346,11 +348,11 @@ public class Player {
                 }
             }
             if (haveFinalItem) {
-                System.out.println("Good thing we picked up " + Game.getFINAL_WEAPON() + "!");
-                System.out.println("Now we can use it to kill " + Game.getLAST_BOSS());
+                OutputManager.outputString("Good thing we picked up " + Game.getFINAL_WEAPON() + "!");
+                OutputManager.outputString("Now we can use it to kill " + Game.getLAST_BOSS());
             } else {
-                System.out.println("Sorry you must have The Ancient Sword of Dracula to enter this fight!");
-                System.out.println("You will now be teleported away to safety... TELEPORTING");
+                OutputManager.outputString("Sorry you must have The Ancient Sword of Dracula to enter this fight!");
+                OutputManager.outputString("You will now be teleported away to safety... TELEPORTING");
                 mCurrentRoom = (Room) mPREVIOUS_ROOMS.firstElement();
             }
         }
@@ -377,12 +379,12 @@ public class Player {
             default:
                 break;
         }
-        System.out.println("You strike " + mCurrentRoom.getMonster().get(0).getName() + " with a devastating hit for " + mDamage + " points!");
+        OutputManager.outputString("You strike " + mCurrentRoom.getMonster().get(0).getName() + " with a devastating hit for " + mDamage + " points!");
         mCurrentRoom.getMonster().get(0).takeDamage(mDamage);
         if (mCurrentRoom.getMonster().get(0).getHealth() > 0) {
-            System.out.println("Monster now only has " + mCurrentRoom.getMonster().get(0).getHealth() + " health left!");
+            OutputManager.outputString("Monster now only has " + mCurrentRoom.getMonster().get(0).getHealth() + " health left!");
         } else {
-            System.out.println("That did it!");
+            OutputManager.outputString("That did it!");
         }
     }
 
@@ -408,7 +410,7 @@ public class Player {
                 if (takenItem.getItemName().equals(Game.getFINAL_WEAPON())) {
                     mHasFinalWeapon = true;
                 }
-                System.out.println("You picked up a weapon!");
+                OutputManager.outputString("You picked up a weapon!");
                 increasePlayerDamage(((Weapon) takenItem).getWeaponDamage());
             }
         }
@@ -417,6 +419,6 @@ public class Player {
 
     private void increasePlayerDamage(int weaponDamage) {
         mDamage += weaponDamage;
-        System.out.println("Your total damage is now " + mDamage + "!");
+        OutputManager.outputString("Your total damage is now " + mDamage + "!");
     }
 }

@@ -1,12 +1,11 @@
-package gui;
+package gui.model;
 
-
+import be.Player;
+import be.Room;
+import bll.Command;
 import bll.CommandWord;
 import bll.Parser;
-import bll.Command;
-import gui.Player;
-import gui.Room;
-
+import gui.view.OutputManager;
 
 /**
  * This class is the main class of the "World of Zuul" application. "World of
@@ -197,19 +196,17 @@ public class Game {
                 finished = true;
             }
         }
-        System.out.println(QUIT_MESSAGE);
+        OutputManager.outputString(QUIT_MESSAGE);
     }
 
     /**
      * Print out the opening message for the player.
      */
     private void printWelcome() {
-        System.out.println();
-        System.out.println("Welcome to " + GAME_TITLE);
-        System.out.println(GAME_TITLE + " is a new, incredibly exciting discovery game.");
-        System.out.println("Type 'help' if you need help.");
-        System.out.println();
-        System.out.println(player.getCurrentRoom().getLongDescription());
+        OutputManager.outputString("\nWelcome to " + GAME_TITLE);
+        OutputManager.outputString(GAME_TITLE + " is a new, incredibly exciting discovery game.");
+        OutputManager.outputString("\nType 'help' if you need help.");
+        OutputManager.outputString(player.getCurrentRoom().getLongDescription());
     }
 
     /**
@@ -220,7 +217,7 @@ public class Game {
         boolean wantToQuit = false;
 
         if (command.isUnknown()) {
-            System.out.println(UNKNOWN);
+            OutputManager.outputString(UNKNOWN);
             return false;
         }
 
@@ -229,7 +226,7 @@ public class Game {
 
         switch (commandWord) {
             case UNKNOWN:
-                System.out.println(UNKNOWN);
+                OutputManager.outputString(UNKNOWN);
                 break;
             case HELP:
                 printHelp();
@@ -267,11 +264,10 @@ public class Game {
      * message and a list of the command words.
      */
     private void printHelp() {
-        System.out.println("You are lost. You are alone. You wander");
-        System.out.println("around at the castle.");
-        System.out.println();
-        System.out.println("Your command words are:");
-        System.out.println(mParser.showCommands());
+        OutputManager.outputString("You are lost. You are alone. You wander");
+        OutputManager.outputString("around at the castle.");
+        OutputManager.outputString("Your command words are:");
+        OutputManager.outputString(mParser.showCommands());
     }
 
     /**
@@ -281,7 +277,7 @@ public class Game {
      */
     private boolean quit(Command command) {
         if (command.hasSecondWord()) {
-            System.out.println("Quit what?");
+            OutputManager.outputString("Quit what?");
             return false;
         } else {
             return true;  // signal that we want to quit
@@ -301,7 +297,7 @@ public class Game {
      * Make game over if player dies
      */
     public static void gameOver() {
-        System.out.println("\nBetter luck next time!");
+        OutputManager.outputString("\nBetter luck next time!");
         isGameOver = true;
     }
 
@@ -309,7 +305,7 @@ public class Game {
      * Win the game by freeing the princess!
      */
     public static void win() {
-        System.out.println("\nCongratulations! You won the game!!!");
+        OutputManager.outputString("\nCongratulations! You won the game!!!");
         isGameWon = true;
     }
 
