@@ -5,8 +5,18 @@
  */
 package gui;
 
+/**
+ * The purpose of this Class is to manage all output of the game
+ *
+ * @author Adamino
+ */
 public class OutputManager {
 
+    /**
+     * Takes parsed Strings from the game and output them to the console
+     *
+     * @param message
+     */
     public static void outputString(String message) {
         System.out.println(message);
     }
