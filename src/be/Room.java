@@ -1,7 +1,9 @@
-package gui;
+package be;
 
-
-import gui.Weapon;
+import be.Challenge;
+import be.Weapon;
+import be.Monster;
+import be.Item;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
