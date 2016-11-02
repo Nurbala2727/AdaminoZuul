@@ -126,11 +126,11 @@ public class Game {
 
         // Add items to the rooms
         // Add the needed items to finish the game
-        casleEntrance.addItem("wase1", "a beautiful wase", 2);
-        casleEntrance.addItem("wase2", "a small very ugly wase", 1);
+        casleEntrance.addItem("vase1", "a beautiful vase", 2);
+        casleEntrance.addItem("vase2", "a small very ugly vase", 1);
 
         castleMainHall.addItem("carpet1", "a huge carpet on the floor with a dragon on", 3);
-        castleMainHall.addItem("wase3", "a huge blue wase with red dragon flames on", 2);
+        castleMainHall.addItem("vase3", "a huge blue vase with red dragon flames on", 2);
 
         wineCellar.addItem("wineRack", "a winerack with 200 different wines in", 150);
         wineCellar.addItem("secretKey", "a mysterious key that might grant you access to a certain location", 0);
