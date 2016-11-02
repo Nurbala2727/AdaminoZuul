@@ -3,7 +3,7 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package gui;
+package gui.view;
 
 /**
  * The purpose of this Class is to manage all output of the game

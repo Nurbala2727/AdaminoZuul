@@ -1,10 +1,11 @@
-package gui;
+package gui.model;
 
 import be.Player;
 import be.Room;
 import bll.Command;
 import bll.CommandWord;
 import bll.Parser;
+import gui.view.OutputManager;
 
 /**
  * This class is the main class of the "World of Zuul" application. "World of

@@ -1,5 +1,5 @@
 
-import gui.Game;
+import gui.model.Game;
 
 /*
  * To change this license header, choose License Headers in Project Properties.
