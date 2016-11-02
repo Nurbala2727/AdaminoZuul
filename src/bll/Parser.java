@@ -1,6 +1,6 @@
 package bll;
 
-
+import gui.view.OutputManager;
 import java.util.Scanner;
 
 /*
@@ -42,7 +42,7 @@ public class Parser {
         String word1 = null;
         String word2 = null;
 
-        System.out.print("> ");     // print prompt
+        OutputManager.outputString("> ");     // print prompt
 
         inputLine = reader.nextLine();
 
